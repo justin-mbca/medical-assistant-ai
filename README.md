@@ -155,6 +155,22 @@ You can view a live demo of the MedAssist AI application here:
    node pdf-backend.js
    ```
 
+## Running ML-based Medical NLP Backend
+
+To enable advanced medical NLP fallback (ClinicalBERT):
+
+1. Install Python dependencies:
+   ```bash
+   pip install flask transformers torch
+   ```
+2. Start the backend server:
+   ```bash
+   python ml_nlp_server.py
+   ```
+3. Ensure your React/Node.js frontend is running and can reach `http://localhost:5001/ml-nlp`.
+
+When you ask a question not covered by the hardcoded logic, the app will automatically call the ML backend and display extracted medical entities.
+
 ## Contributing
 Contributions are welcome! Please open issues or submit pull requests for improvements or new features.
 

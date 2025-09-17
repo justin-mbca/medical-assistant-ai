@@ -225,7 +225,7 @@ const MedAssistAI = () => {
       const condData = medicalKnowledge.conditions[conditionMentioned];
       return `Risks of ${conditionMentioned.charAt(0).toUpperCase() + conditionMentioned.slice(1)} include: ${condData.riskFactors.join(', ')}. Monitoring is recommended: ${condData.monitoring}. Please consult your healthcare provider for personalized advice.`;
     }
-    // Refined scenario-specific responses
+    // Refined scenario-specific responses (hardcoded)
     if (lowerInput.includes('headache') && lowerInput.includes('fever')) {
       return 'You mentioned headache and fever. Possible causes include infection, inflammation, or dehydration. Headache is usually low urgency, but fever can indicate infection. If symptoms persist or worsen, please consult a healthcare provider.';
     }
@@ -267,7 +267,22 @@ const MedAssistAI = () => {
     if (lowerInput.includes('medication') || lowerInput.includes('drug')) {
       return "I can help analyze medication interactions and provide drug information. Please specify the medications you're asking about.";
     }
-    return "I understand you're seeking medical information. Could you provide more specific symptoms or concerns so I can better assist you?";
+    // Fallback to ML-based NLP if no hardcoded match or symptom detected
+    // Now async: returns a Promise
+    return fetch('http://localhost:5001/ml-nlp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: input })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.result) {
+          return `ML-based medical NLP entities: ${JSON.stringify(data.result)}`;
+        } else {
+          return "I understand you're seeking medical information. Could you provide more specific symptoms or concerns so I can better assist you?";
+        }
+      })
+      .catch(() => "I understand you're seeking medical information. Could you provide more specific symptoms or concerns so I can better assist you?");
   };
 
   // Chat Handler
