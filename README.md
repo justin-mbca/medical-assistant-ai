@@ -128,6 +128,12 @@ flowchart TD
     II --> JJ[Display to User]
 ```
 
+## Demo
+
+You can view a live demo of the MedAssist AI application here:
+
+[MedAssist AI Demo (Claude Server)](https://claude.ai/public/artifacts/0d3fe799-2f58-4ea3-a461-9a9f4ee2e9d7)
+
 ## Getting Started
 1. Clone the repository:
    ```bash
