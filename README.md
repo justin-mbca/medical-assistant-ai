@@ -134,6 +134,8 @@ You can view a live demo of the MedAssist AI application here:
 
 [MedAssist AI Demo (Claude Server)](https://claude.ai/public/artifacts/0d3fe799-2f58-4ea3-a461-9a9f4ee2e9d7)
 
+**Note:** This demo showcases only the graphical user interface (GUI) and includes limited features compared to the full capabilities available in the GitHub codebase. For the complete application with all features, please refer to this repository and deploy locally or to a cloud platform.
+
 ## Getting Started
 1. Clone the repository:
    ```bash
