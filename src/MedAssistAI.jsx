@@ -204,6 +204,10 @@ const MedAssistAI = () => {
 
   // Medical response generator
   const generateMedicalResponse = (input, context) => {
+    // Emergency hardcoded response for sudden vision loss
+    if (input.toLowerCase().includes('sudden vision loss')) {
+      return 'Sudden vision loss is considered a medical emergency. It can be caused by serious conditions such as retinal detachment, stroke, or acute glaucoma. Immediate evaluation by a healthcare professional is recommended. If you or someone else experiences sudden vision loss, seek emergency medical care right away.';
+    }
     const lowerInput = input.toLowerCase();
     // Drug interaction detection
     const medsMentioned = Object.keys(medicalKnowledge.drugInteractions).filter(med => lowerInput.includes(med));
@@ -276,8 +280,10 @@ const MedAssistAI = () => {
     })
       .then(res => res.json())
       .then(data => {
-        if (data && data.result) {
+        if (data && data.result && Array.isArray(data.result) && data.result.length > 0) {
           return `ML-based medical NLP entities: ${JSON.stringify(data.result)}`;
+        } else if (data && data.cannot_answer) {
+          return data.message || "Sorry, the medical NLP model could not provide an answer for this question.";
         } else {
           return "I understand you're seeking medical information. Could you provide more specific symptoms or concerns so I can better assist you?";
         }
@@ -291,12 +297,19 @@ const MedAssistAI = () => {
     const userMessage = { type: 'user', content: chatInput, timestamp: new Date() };
     setChatMessages(prev => [...prev, userMessage]);
     setIsProcessing(true);
-    setTimeout(() => {
-      const response = generateMedicalResponse(chatInput, { symptoms, patientData });
-      const botMessage = { type: 'bot', content: response, timestamp: new Date() };
+    try {
+      const response = await generateMedicalResponse(chatInput, { symptoms, patientData });
+      // If response is a Promise (from ML backend), await it
+      let finalResponse = response;
+      if (typeof response === 'object' && typeof response.then === 'function') {
+        finalResponse = await response;
+      }
+      const botMessage = { type: 'bot', content: finalResponse, timestamp: new Date() };
       setChatMessages(prev => [...prev, botMessage]);
-      setIsProcessing(false);
-    }, 1500);
+    } catch (err) {
+      setChatMessages(prev => [...prev, { type: 'bot', content: 'Sorry, there was an error processing your request.', timestamp: new Date() }]);
+    }
+    setIsProcessing(false);
     setChatInput('');
   };
 
