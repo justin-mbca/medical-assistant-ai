@@ -8,7 +8,7 @@ const upload = multer();
 app.use(cors());
 
 // PDF extraction endpoint
-app.post('/extract-pdf', upload.single('file'), async (req, res) => {
+app.post('/extract-pdf', upload.single('pdf'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -20,7 +20,7 @@ app.post('/extract-pdf', upload.single('file'), async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
-  console.log(`PDF extraction server running on port ${PORT}`);
+  console.log(`PDF extraction backend running on port ${PORT}`);
 });

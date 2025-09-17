@@ -50,6 +50,9 @@ const MedAssistAI = () => {
   const [riskScore, setRiskScore] = useState(null);
   const [analysisResult, setAnalysisResult] = useState(null);
 
+  // Backend URL for PDF extraction
+  const PDF_BACKEND_URL = import.meta.env.VITE_PDF_BACKEND_URL || 'http://localhost:5001/extract-pdf';
+
   // Handle file upload
   const handleFileUpload = (event) => {
     const files = Array.from(event.target.files);
@@ -75,7 +78,7 @@ const MedAssistAI = () => {
         // Send PDF to backend for extraction
         const formData = new FormData();
         formData.append('file', file);
-        fetch('http://localhost:5000/extract-pdf', {
+        fetch(PDF_BACKEND_URL, {
           method: 'POST',
           body: formData
         })
