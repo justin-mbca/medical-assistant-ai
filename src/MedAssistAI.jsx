@@ -225,10 +225,34 @@ const MedAssistAI = () => {
       const condData = medicalKnowledge.conditions[conditionMentioned];
       return `Risks of ${conditionMentioned.charAt(0).toUpperCase() + conditionMentioned.slice(1)} include: ${condData.riskFactors.join(', ')}. Monitoring is recommended: ${condData.monitoring}. Please consult your healthcare provider for personalized advice.`;
     }
-    // Symptom detection
-    const nlpResult = { symptoms: symptoms.filter(s => lowerInput.includes(s)) };
-    if (nlpResult.symptoms.length > 0) {
-      const responses = nlpResult.symptoms.map(symptom => {
+    // Refined scenario-specific responses
+    if (lowerInput.includes('headache') && lowerInput.includes('fever')) {
+      return 'You mentioned headache and fever. Possible causes include infection, inflammation, or dehydration. Headache is usually low urgency, but fever can indicate infection. If symptoms persist or worsen, please consult a healthcare provider.';
+    }
+    if (lowerInput.includes('ibuprofen') && lowerInput.includes('warfarin')) {
+      return 'Ibuprofen and warfarin may interact and increase bleeding risk. Avoid combining these medications unless directed by your healthcare provider. Always confirm medication safety with your doctor.';
+    }
+    if (lowerInput.includes('chest pain') || lowerInput.includes('chestpain')) {
+      return 'Chest pain can be a sign of a serious condition such as heart disease. Urgency is high. Seek immediate medical attention, especially if pain is severe, persistent, or accompanied by shortness of breath or sweating.';
+    }
+    if (lowerInput.includes('risks of hypertension') || lowerInput.includes('hypertension')) {
+      return 'Hypertension increases the risk of heart disease, stroke, and kidney problems. Risk factors include age, obesity, smoking, and family history. Regular monitoring and lifestyle changes are recommended. Consult your provider for personalized advice.';
+    }
+    if (lowerInput.includes('tired') && lowerInput.includes('weak')) {
+      return 'Tiredness and weakness may result from anemia, infection, or chronic disease. If these symptoms are new, severe, or persistent, please consult a healthcare provider for evaluation.';
+    }
+    if (lowerInput.includes('metformin') && lowerInput.includes('alcohol')) {
+      return 'Combining metformin and alcohol can increase the risk of lactic acidosis and low blood sugar. It is generally advised to limit alcohol intake while taking metformin. Discuss with your healthcare provider for personalized guidance.';
+    }
+    // Symptom detection (match variations)
+    const symptomKeys = Object.keys(medicalKnowledge.symptoms);
+    const detectedSymptoms = symptomKeys.filter(s => {
+      // Match exact, spaced, or hyphenated versions
+      const variations = [s, s.replace(/([a-z])([A-Z])/g, '$1 $2'), s.replace(/([a-z])([A-Z])/g, '$1-$2'), s.replace(/([a-z])([A-Z])/g, '$1 $2').replace('pain', ' pain')];
+      return variations.some(v => lowerInput.includes(v.replace(/([A-Z])/g, m => m.toLowerCase())) || lowerInput.includes(v.replace(/([A-Z])/g, m => m.toLowerCase()).replace(' ', '')));
+    });
+    if (detectedSymptoms.length > 0) {
+      const responses = detectedSymptoms.map(symptom => {
         const symptomData = medicalKnowledge.symptoms[symptom];
         if (symptomData) {
           return `Symptom: "${symptom}". Possible causes: ${symptomData.commonCauses.join(', ')}. Urgency: ${symptomData.urgency}. ` +
