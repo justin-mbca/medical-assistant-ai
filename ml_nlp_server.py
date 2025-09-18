@@ -19,6 +19,15 @@ def convert_to_serializable(obj):
 def ml_nlp():
     data = request.get_json()
     text = data.get('text', '')
+    # Emergency keyword detection (traditional NLP)
+    emergency_keywords = [
+        "chest pain", "sudden vision loss", "shortness of breath", "severe bleeding", "loss of consciousness"
+    ]
+    if any(kw in text.lower() for kw in emergency_keywords):
+        return jsonify({
+            "emergency": True,
+            "message": "EMERGENCY: Your symptoms may indicate a serious medical condition. Seek immediate medical attention or call emergency services."
+        })
     result = nlp(text)
     result = convert_to_serializable(result)
     if not result or (isinstance(result, list) and len(result) == 0):

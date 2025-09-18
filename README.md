@@ -171,6 +171,79 @@ To enable advanced medical NLP fallback (ClinicalBERT):
 
 When you ask a question not covered by the hardcoded logic, the app will automatically call the ML backend and display extracted medical entities.
 
+## Traditional NLP Examples
+
+This project demonstrates how to use traditional NLP techniques alongside LLMs for medical text analysis.
+
+### Features & Examples
+
+1. **Spelling Correction**
+   - Fixes common typos in medical terms.
+   - Example:
+     ```python
+     from nlp_traditional_examples import correct_spelling
+     correct_spelling("Patient has feverr and diabtes.")
+     # Output: 'Patient has fever and diabetes.'
+     ```
+
+2. **Stopword Removal**
+   - Removes common English stopwords.
+   - Example:
+     ```python
+     from nlp_traditional_examples import remove_stopwords
+     remove_stopwords("Patient has a fever and diabetes.")
+     # Output: 'Patient fever diabetes.'
+     ```
+
+3. **Stemming**
+   - Reduces words to their root form.
+   - Example:
+     ```python
+     from nlp_traditional_examples import stem_text
+     stem_text("Patient has fevers and diabetic symptoms.")
+     # Output: 'patient ha fever and diabet symptom.'
+     ```
+
+4. **Lemmatization**
+   - Uses spaCy to lemmatize words.
+   - Example:
+     ```python
+     from nlp_traditional_examples import lemmatize_text
+     lemmatize_text("Patient has fevers and diabetic symptoms.")
+     # Output: 'Patient have fever and diabetic symptom.'
+     ```
+
+5. **Pattern Extraction (Lab Values)**
+   - Extracts lab values using regex.
+   - Example:
+     ```python
+     from nlp_traditional_examples import extract_lab_values
+     extract_lab_values("Creatinine: 1.2 Hemoglobin: 13")
+     # Output: [('Creatinine', '1.2'), ('Hemoglobin', '13')]
+     ```
+
+6. **Section Detection**
+   - Detects clinical note sections.
+   - Example:
+     ```python
+     from nlp_traditional_examples import detect_sections
+     detect_sections("History: ... Assessment: ... Plan: ...")
+     # Output: ['History', 'Assessment', 'Plan']
+     ```
+
+---
+
+To run all examples:
+```bash
+python nlp_traditional_examples.py
+```
+
+Make sure you have installed dependencies:
+```bash
+pip install spacy nltk
+python -m spacy download en_core_web_sm
+```
+
 ## Contributing
 Contributions are welcome! Please open issues or submit pull requests for improvements or new features.
 
